@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Surprise</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffb3c1, #ff66a3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  h1 {
+    color: #b30059;
+    font-size: 3em;
+    text-align: center;
+    margin-bottom: 50px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  }
+  #buttons {
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  button {
+    padding: 15px 40px;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    background-color: #ff4d94;
+    color: white;
+    position: relative;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+  }
+  button:hover {
+    background-color: #ff1a75;
+    transform: scale(1.1);
+  }
+  #details {
+    display: none;
+    margin-top: 40px;
+    text-align: center;
+    font-size: 1.5em;
+    color: #b30059;
+    animation: fadeIn 1s forwards;
+  }
+  @keyframes fadeIn { from {opacity:0;} to{opacity:1;} }
+
+  /* Confetti */
+  .confetti, .heart {
+    position: absolute;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  .confetti {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    animation: fall 3s linear forwards;
+  }
+  .heart {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    clip-path: polygon(50% 0%, 61% 8%, 68% 20%, 50% 100%, 32% 20%, 39% 8%);
+    animation: floatUp 4s linear forwards;
+  }
+  @keyframes fall { 0% { transform: translateY(0) rotate(0deg);} 100% { transform: translateY(100vh) rotate(360deg);} }
+  @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg);} 100% { transform: translateY(-100vh) rotate(360deg);} }
+</style>
+</head>
+<body>
+
+<h1>Will you be my Valentine?</h1>
+<div id="buttons">
+  <button id="yes">Yes</button>
+  <button id="no">No</button>
+</div>
+
+<div id="details">
+  <p>Day: 14 February</p>
+  <p>Time: 6:30</p>
+  <p>Place: surprise ❤️</p>
+</div>
+
+<!-- Romantic music -->
+<audio id="music" src="https://www.bensound.com/bensound-music/bensound-romantic.mp3"></audio>
+
+<script>
+const noBtn = document.getElementById('no');
+const yesBtn = document.getElementById('yes');
+const details = document.getElementById('details');
+const music = document.getElementById('music');
+
+// ===== No button escape (desktop & mobile) =====
+function moveNoButton(){
+  noBtn.style.position = 'absolute';
+  noBtn.style.left = Math.random() * (window.innerWidth - noBtn.offsetWidth) + 'px';
+  noBtn.style.top = Math.random() * (window.innerHeight - noBtn.offsetHeight) + 'px';
+}
+
+// Escape on mouse hover (desktop)
+document.addEventListener('mousemove', (e) => {
+  const rect = noBtn.getBoundingClientRect();
+  const distance = Math.hypot(e.clientX - (rect.left + rect.width/2), e.clientY - (rect.top + rect.height/2));
+  if(distance < 120){ moveNoButton(); }
+});
+
+// Escape on touch (mobile)
+noBtn.addEventListener('touchstart', moveNoButton);
+
+// ===== Yes button click =====
+yesBtn.addEventListener('click', () => {
+  alert("She said YES! ❤️ See you on 14 February!");  // popup
+  details.style.display = 'block';
+  music.play();
+
+  // Confetti
+  for(let i=0;i<150;i++){
+    const confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
+    confetti.style.left = Math.random() * window.innerWidth + 'px';
+    confetti.style.top = Math.random() * window.innerHeight/2 + 'px';
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 3000);
+  }
+
+  // Floating hearts
+  setInterval(() => {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.backgroundColor = `hsl(${Math.random()*360}, 80%, 60%)`;
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 4000);
+  }, 200);
+});
+</script>
+
+</body>
+</html>
